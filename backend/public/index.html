@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Server Status</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    .status {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 5px;
+      display: inline-block;
+    }
+    .live {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .down {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Server Status</h1>
+  <p id="statusText" class="status">Checking...</p>
+  <button onclick="checkStatus()">Check Server</button>
+  <script>
+    function checkStatus() {
+      fetch('/status')
+        .then((response) => {
+          if (response.ok) {
+            document.getElementById('statusText').textContent = 'Server is Live!';
+            document.getElementById('statusText').className = 'status live';
+          } else {
+            throw new Error('Server is down');
+          }
+        })
+        .catch(() => {
+          document.getElementById('statusText').textContent = 'Server is Down!';
+          document.getElementById('statusText').className = 'status down';
+        });
+    }
+    checkStatus();
+  </script>
+</body>
+</html>
