@@ -2,14 +2,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const cors = require('cors');
-const path = require('path'); // Import the 'path' module
+const path = require('path');
 const { domainToASCII, domainToUnicode } = require('url');
 const bookRoutes = require('./routes/bookRoutes');
 const borrowerRoutes = require('./routes/borrowerRoutes');
 const authorRoutes = require('./routes/authorRoutes');
 const countRoutes = require('./routes/countRoutes');
 
-const app = express(); // Initialize 'app'
+const app = express(); // Initialize the Express app
 
 // Middleware
 app.use(express.json());
@@ -20,15 +20,18 @@ mongoose
   .connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    dbName: 'Library_DB', // Change this to your desired database name
+    dbName: 'Library_DB',
   })
   .then(() => console.log('Connected to MongoDB'))
-  .catch((error) => console.error('MongoDB connection error:', error));
+  .catch((error) => {
+    console.error('MongoDB connection error:', error.message);
+    process.exit(1); // Exit the app if the database connection fails
+  });
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Example Punycode operations using URL module
+// Example Punycode operations
 const unicodeDomain = domainToUnicode('xn--example-9h2c.com');
 const asciiDomain = domainToASCII('example.com');
 console.log(`Unicode Domain: ${unicodeDomain}`);
